@@ -1,4 +1,5 @@
 import { track, trigger } from './effect'
+import { ReactiveFlags } from './reactive'
 
 // 缓存get和set, 不用每次初始化调用
 const get = createGetter()
@@ -8,6 +9,11 @@ const readonlyGet = createGetter(true)
 
 function createGetter(isReadonly = false) {
     return function (target, key) {
+        if (key === ReactiveFlags.IS_REACTIVE) {
+            return !isReadonly
+        } else if (key === ReactiveFlags.IS_READONLY) {
+            return isReadonly
+        }
         const res = Reflect.get(target, key)
         // 如果不是readonly，依赖收集
         if (!isReadonly) {
