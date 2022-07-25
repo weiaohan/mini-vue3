@@ -52,14 +52,9 @@ describe('effect', () => {
 
     it('stop', () => {
         let dummy
-        let dummy2
         const obj = reactive({ foo: 1 })
-        // const obj2 = reactive({ bar: 2 })
         const runner = effect(() => {
             dummy = obj.foo
-        })
-        const runner2 = effect(() => {
-            dummy2 = obj.foo
         })
         expect(dummy).toBe(1)
         obj.foo = 2
@@ -68,7 +63,6 @@ describe('effect', () => {
         expect(dummy).toBe(2)
         stop(runner)
         obj.foo = 3
-        expect(dummy2).toBe(3)
         expect(dummy).toBe(2)
 
         runner()

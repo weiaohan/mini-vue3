@@ -69,6 +69,6 @@ export function effect(fn, options: any = {}) {
 }
 
 // fn是一个runner，所以runner需要保存当前effect实例
-export function stop(fn) {
-    fn.effect.stop()
+export function stop(runner) {
+    runner.effect.stop()
 }
