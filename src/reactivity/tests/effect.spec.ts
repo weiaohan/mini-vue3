@@ -58,14 +58,28 @@ describe('effect', () => {
         })
         expect(dummy).toBe(1)
         obj.foo = 2
-        // obj2.bar = 2
-        // expect(dummy2).toBe(2)
         expect(dummy).toBe(2)
         stop(runner)
-        obj.foo = 3
+        // obj.foo = 3
+        obj.foo++
+        // 测试会执行失败，因为obj.foo++ -> obj.foo = obj.foo + 1
+        // 此时会调用obj的getter,因为之前也没有清空全局保存的targetMap,又把effect的依赖收集起来了,之后setter的时候，就会触发effect收集的依赖
         expect(dummy).toBe(2)
 
         runner()
         expect(dummy).toBe(3)
+    })
+
+    it('onStop', () => {
+        const obj = reactive({ foo: 1 })
+        const onStop = jest.fn()
+        let dummy;
+        const runner = effect(() => {
+            dummy = obj.foo
+        }, {
+            onStop
+        })
+        stop(runner)
+        expect(onStop).toBeCalledTimes(1)
     })
 })
